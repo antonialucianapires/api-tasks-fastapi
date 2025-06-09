@@ -22,7 +22,7 @@ async def list_tasks():
 
 @router.post("/tasks")
 async def create_task(task: Task):
-    next_id = len(tasks) + 1
+    next_id = max((t.id or 0 for t in tasks), default=0) + 1
     task.id = next_id
     tasks.append(task)
     return task
@@ -34,7 +34,7 @@ async def upload_tasks(file: UploadFile = File(...)):
     reader = csv.DictReader(io.StringIO(text))
 
     new_tasks = []
-    start_id = len(tasks) + 1
+    start_id = max((t.id or 0 for t in tasks), default=0) + 1
 
     for index, row in enumerate(reader):
         title = row["title"]
